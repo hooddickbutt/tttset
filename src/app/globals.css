@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f3f0e8;
+  --bg-elev: #fffcf6;
+  --ink: #1b1e18;
+  --muted: #5c6158;
+  --line: rgba(27, 30, 24, 0.12);
+  --accent: #9d4524;
+  --accent-soft: #f3e2d8;
+  --on-accent: #fff8f4;
+  --good: #1d6b43;
+  --warn: #8a5a10;
+  --bad: #9d2e2e;
+  --shadow: 0 30px 70px rgba(48, 36, 24, 0.08);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #10130f;
+  --bg-elev: #181c16;
+  --ink: #f4f1ea;
+  --muted: #a7ac9f;
+  --line: rgba(244, 241, 234, 0.14);
+  --accent: #e3926c;
+  --accent-soft: #2c221c;
+  --on-accent: #1b120e;
+  --good: #8dceab;
+  --warn: #e2c07a;
+  --bad: #f0a3a3;
+  --shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --font-sans: var(--font-sans-app), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-app), Georgia, serif;
+  --font-mono: var(--font-mono-app), ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.7s ease both;
+}
