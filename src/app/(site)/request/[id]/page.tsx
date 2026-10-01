@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Qr } from "@/components/app/qr";
+import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/lib/db";
 import { formatWhen, shortAddress } from "@/lib/format";
@@ -33,11 +33,22 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
   const host = headerList.get("x-forwarded-host") || headerList.get("host");
   const proto = headerList.get("x-forwarded-proto") || "http";
   const origin = appUrl || (host ? `${proto}://${host}` : "");
+  const qr = origin
+    ? await QRCode.toString(`${origin}/request/${request.id}`, {
+        type: "svg",
+        margin: 1,
+        width: 220,
+        color: { dark: "#1b1e18", light: "#ffffff" },
+      })
+    : "";
 
   return (
     <article className="mx-auto max-w-xl px-5 py-16">
       <p className="text-xs tracking-[0.18em] text-muted uppercase">Payment request</p>
-      <h1 className="mt-3 font-serif text-5xl tracking-tight">{request.amount} {request.assetSymbol}</h1>
+      <h1 className="mt-3 font-serif text-5xl tracking-tight">
+        {request.amount}
+        <span className="ml-3">{request.assetSymbol}</span>
+      </h1>
       <p className="mt-4 text-lg">{linkLabel}</p>
       <dl className="mt-8 space-y-4 text-sm">
         <div>
@@ -86,7 +97,16 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
         <p className="mt-6 text-sm text-bad">This request was created for a different network than the one this deployment is configured to use.</p>
       ) : null}
       <div className="mt-8">
-        {origin ? <Qr value={`${origin}/request/${request.id}`} label="This QR encodes the payment-request URL." /> : null}
+        {qr ? (
+          <figure className="w-fit">
+            <div
+              className="rounded-2xl bg-white p-3 [&_svg]:h-auto [&_svg]:w-44"
+              aria-label="Payment request QR code"
+              dangerouslySetInnerHTML={{ __html: qr }}
+            />
+            <figcaption className="mt-2 max-w-44 text-xs leading-5 text-muted">This QR encodes the payment-request URL.</figcaption>
+          </figure>
+        ) : null}
       </div>
       {request.status === "open" && request.chainId === chainId ? (
         <Button asChild className="mt-8">
